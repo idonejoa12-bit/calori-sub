@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080808"><meta name="description" content="Calori Sub: registro gratuito de comidas y estimación nutricional.">
+<link rel="manifest" href="manifest.json"><link rel="stylesheet" href="styles.css">
+<title>Calori Sub</title>
+</head>
+<body>
+<header class="top"><div class="brand"><div class="logo">CS</div><div><strong>CALORI SUB</strong><small>Tu registro de comidas</small></div></div><button id="settingsBtn" class="icon-btn" aria-label="Perfil">⚙</button></header>
+<main id="app">
+<section id="onboarding" class="panel hidden">
+  <div class="eyebrow">BIENVENIDO/A</div><h1>Armá tu perfil</h1><p class="muted">Personalizá tu experiencia. Podés cambiar estos datos después.</p>
+  <form id="profileForm">
+    <label>¿Cuál es tu objetivo?</label><div class="choice-row"><label class="choice"><input type="radio" name="goal" value="mantener" checked><span>Mantener</span></label><label class="choice"><input type="radio" name="goal" value="perder"><span>Perder peso</span></label><label class="choice"><input type="radio" name="goal" value="ganar"><span>Ganar peso</span></label></div>
+    <div class="grid2"><div><label for="age">Edad</label><input id="age" type="number" min="1" max="120" placeholder="Ej. 25" required></div><div><label for="height">Altura (cm)</label><input id="height" type="number" min="50" max="250" placeholder="Ej. 170" required></div></div>
+    <label for="weight">Peso actual (kg)</label><input id="weight" type="number" min="10" max="500" step=".1" placeholder="Ej. 70" required>
+    <label for="target">Peso objetivo (kg) <span class="muted">(opcional)</span></label><input id="target" type="number" min="10" max="500" step=".1" placeholder="Podés dejarlo vacío">
+    <p class="notice">Calori Sub ofrece estimaciones, no diagnósticos. Si sos menor de 18 años, hablá con un profesional de salud antes de intentar cambiar tu peso.</p>
+    <button class="primary" type="submit">Crear mi perfil</button><button id="skipProfile" class="secondary" type="button">Usar sin perfil</button>
+  </form>
+</section>
+<section id="dashboard">
+  <div class="hero"><div><div class="eyebrow">RESUMEN DE HOY</div><h1>Hola 👋</h1><p class="muted" id="dateLabel"></p></div><div class="today-badge">CS</div></div>
+  <div class="panel total"><div><span class="muted">Calorías registradas</span><div class="big"><span id="totalKcal">0</span><small> kcal</small></div></div><div class="ring"><span id="mealCount">0</span><small>comidas</small></div></div>
+  <div class="section-head"><h2>Agregar comida</h2><span class="tag">GRATIS</span></div>
+  <div class="add-grid">
+    <button class="action-card" id="photoBtn"><span class="action-icon">📷</span><b>Sacar foto</b><small>Adjuntar imagen</small></button>
+    <button class="action-card" id="describeBtn"><span class="action-icon">✍️</span><b>Describir comida</b><small>Ingresá ingredientes</small></button>
+  </div>
+  <section class="panel search-panel">
+    <div class="section-head"><h2>🔎 Buscar alimentos</h2><span class="tag">ONLINE</span></div>
+    <p class="muted">Buscá alimentos para consultar información nutricional. Requiere conexión a internet.</p>
+    <div class="search-row"><input id="foodSearch" type="search" placeholder="Ej. manzana, arroz, yogur"><button id="searchFoodBtn" class="primary">Buscar</button></div>
+    <div id="searchResults" class="search-results"></div>
+  </section>
+  <input type="file" id="photoInput" accept="image/*" capture="environment" hidden>
+  <section id="foodForm" class="panel hidden"><div class="section-head"><h2 id="foodFormTitle">Nueva comida</h2><button id="closeFood" class="icon-btn">✕</button></div>
+    <div id="photoPreviewWrap" class="hidden"><img id="photoPreview" alt="Vista previa de la comida"></div>
+    <label for="mealType">Tipo de comida</label><select id="mealType"><option>Desayuno</option><option>Almuerzo</option><option>Merienda</option><option>Cena</option><option>Snack</option></select>
+    <label for="foodName">¿Qué comiste?</label><textarea id="foodName" rows="3" placeholder="Ej. un plato de arroz con pollo, una cucharada de aceite..."></textarea>
+    <div class="grid2"><div><label for="portion">Porción aproximada</label><input id="portion" placeholder="Ej. 1 plato (350 g)"></div><div><label for="manualKcal">Calorías (opcional)</label><input id="manualKcal" type="number" min="0" max="10000" placeholder="Estimación"></div></div>
+    <p class="muted tiny">La estimación orientativa puede variar según ingredientes, cantidades y preparación. Revisá los resultados antes de guardar.</p>
+    <button id="analyzePhotoBtn" class="secondary hidden" type="button">🤖 Analizar foto con IA</button>
+    <button id="estimateBtn" class="secondary" type="button">Estimar por descripción</button><div id="estimateResult" class="estimate hidden"></div>
+    <button id="saveFood" class="primary" type="button">Guardar comida</button>
+  </section>
+  <div class="section-head"><h2>Comidas de hoy</h2><button id="clearToday" class="text-btn">Vaciar día</button></div>
+  <div id="mealList" class="meal-list"></div>
+  <div id="emptyState" class="empty"><div>🍽️</div><b>Todavía no registraste comidas</b><p>Agregá tu primera comida para empezar.</p></div>
+  <p class="footer-note">Las calorías son aproximadas. Para mayor precisión, registrá ingredientes, cantidades y método de preparación.</p>
+</section>
+<nav class="bottom-nav"><button class="active"><span>⌂</span>Hoy</button><button id="historyBtn"><span>▤</span>Historial</button><button id="profileNav"><span>◉</span>Perfil</button></nav>
+</main>
+<div id="historyModal" class="modal hidden"><div class="modal-card"><div class="section-head"><h2>Historial</h2><button class="icon-btn" data-close="historyModal">✕</button></div><div id="historyList"></div><button class="secondary" data-close="historyModal">Cerrar</button></div></div>
+<div id="profileModal" class="modal hidden"><div class="modal-card"><div class="section-head"><h2>Mi perfil</h2><button class="icon-btn" data-close="profileModal">✕</button></div><div id="profileSummary"></div><button id="editProfile" class="primary">Editar perfil</button><button class="secondary" data-close="profileModal">Cerrar</button></div></div>
+<div id="toast" class="toast hidden"></div>
+<script src="app.js"></script>
+</body></html>
